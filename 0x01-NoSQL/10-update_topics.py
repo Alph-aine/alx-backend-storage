@@ -4,7 +4,7 @@
 
 def update_topics(mongo_collection, name, topics):
     '''updates the document for included names'''
-    document = mongo_collection.update(
-            {name: name},
-            {$set: {topics: topics}}
+    document = mongo_collection.update_many(
+            {"name": name},
+            {"$set": {"topics": topics}}
             )
