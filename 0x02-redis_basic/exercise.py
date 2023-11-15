@@ -3,7 +3,7 @@
 
 import redis
 import uuid
-from typing import Union
+from typing import Callable, Union
 
 
 class Cache:
@@ -20,3 +20,22 @@ class Cache:
         self._redis.set(key, data)
 
         return key
+
+    def get(self, key: str, fn: Callable = None) -> Union[
+            str, bytes, int, None
+    ]:
+        '''Getter method'''
+        data = self._redis.get(key)
+
+        if data is not None and fn is not None:
+            return fn(data)
+
+        return data
+
+    def get_str(self, key: str) -> Union[str, None]:
+        '''The get str of get'''
+        return self.get(key, fn=lambda d: decode("utf-8"))
+
+    def get_int(self, key: str) -> Union[int, None]:
+        '''The int version of get'''
+        return self.get(key, fn=int)
